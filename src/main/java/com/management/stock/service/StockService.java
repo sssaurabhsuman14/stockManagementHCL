@@ -16,7 +16,6 @@ import com.management.stock.model.StockOrderModel;
 public interface StockService 
 {
 
-	public List<StockModel> entityListToModelList(List<Stock> stockList, List<StockModel> stockModelList);
 
 	public List<StockModel> getAllStock() throws StockException;
 
