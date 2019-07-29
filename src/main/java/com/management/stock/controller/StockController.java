@@ -1,6 +1,7 @@
 package com.management.stock.controller;
 
 import java.util.HashMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.management.stock.entity.StockOrder;
 import com.management.stock.model.ResponseData;
 import com.management.stock.model.StockModel;
+import com.management.stock.service.StockService;
+import com.management.stock.service.StockService;
+
+
 import com.management.stock.service.StockService;
 
 @RestController
