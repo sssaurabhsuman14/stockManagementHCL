@@ -99,15 +99,15 @@ public class StockServiceImpl implements StockService{
 			   stock = stockOptional.get();
 			  }
 			  if(numberOfUnits<500) {
-			   fees = (0.10D * numberOfUnits * stock.getPrice())/100;//logic to get it according to date
+			   fees = (0.10D *(numberOfUnits * stock.getPrice()))/100;//logic to get it according to date
 			  }
 			  else {
-			   fees = (0.15D * 500 * stock.getPrice() + (0.10D *  (numberOfUnits-500)*  stock.getPrice()))/100;
+			   fees = (0.15D *( 500 * stock.getPrice()) + (0.10D * ((numberOfUnits-500)*  stock.getPrice())))/100;
 
 			  }
 
 			  BeanUtils.copyProperties(stock, stockModel);
-			  stockModel.setTotalCharge(stock.getPrice()+ fees);
+			  stockModel.setTotalCharge((numberOfUnits*stock.getPrice())+ fees);
 
 			 }
 
