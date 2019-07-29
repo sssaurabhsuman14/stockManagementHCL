@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.management.stock.entity.StockOrder;
+import com.management.stock.exception.StockException;
 import com.management.stock.model.ResponseData;
 import com.management.stock.model.StockModel;
 import com.management.stock.service.StockService;
@@ -48,7 +49,7 @@ public class StockController
 
 
 
-	@GetMapping("/all") public ResponseEntity<ResponseData> showAllStock() {
+	@GetMapping("/all") public ResponseEntity<ResponseData> showAllStock() throws StockException {
 		List<StockModel> allStockList = stockService.getAllStock(); Map<Integer,
 		String> status = new HashMap(); status.put(200, "Successfull fetch");
 		ResponseData response = new ResponseData("Stock List", status, allStockList);
