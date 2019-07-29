@@ -22,5 +22,6 @@ public class StockModel
 	private String  currency;
 	private Double  matchScore;
 	private Double  price;
+	private Double totalCharge;
 
 }

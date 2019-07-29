@@ -1,5 +1,7 @@
 package com.management.stock.service;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -15,6 +17,11 @@ public interface StockService
 	
 	public List<StockModel> entityListToModelList(List<Stock> stockList, List<StockModel> stockModelList);
 
+
     public List<StockOrder> getAllStockOrders(Long userId);
+
+	public StockModel getQuotationService(Long userId, Long stockId, int numberOfUnits, LocalDate quotationDate);
+	
+
 
 }

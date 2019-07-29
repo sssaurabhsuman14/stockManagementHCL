@@ -1,5 +1,6 @@
 package com.management.stock.serviceImp;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -7,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import com.management.stock.entity.Stock;
 import com.management.stock.entity.StockOrder;
@@ -19,7 +21,7 @@ public class StockServiceImpl implements StockService{
 
 	@Autowired
 	StockRepository stockRepository;
-	
+
 	@Override
 	public List<StockModel> getAllStock() 
 	{
@@ -77,10 +79,33 @@ public class StockServiceImpl implements StockService{
 	}
 	
 	@Override
+
 	public List<StockOrder> getAllStockOrders(Long userId){
 		List<StockOrder> stockList=new ArrayList<>();
 		stockList=stockRepository.findAllByUserId();
 		return stockList;
 		
 	}
+
+	public StockModel getQuotationService(Long userId, Long stockId, int numberOfUnits, LocalDate quotationDate ) {
+
+		Double fees = 0.00;
+		Stock stock = new Stock();
+		StockModel stockModel = new StockModel();
+		if(!(ObjectUtils.isEmpty(userId) && ObjectUtils.isEmpty(stockId))) {
+
+			stock = stockRepository.findOne(stockId);
+			if(numberOfUnits<500) {
+				fees = 0.10 * numberOfUnits * stock.getPrice();//logic to get it according to date
+			}
+			else {
+				fees = 0.15 * numberOfUnits * stock.getPrice();
+			}
+			stockModel.setTotalCharge(stock.getPrice() + fees); 
+		}
+
+		BeanUtils.copyProperties(stock, stockModel);
+		return null;
+	}
+
 }
