@@ -21,13 +21,15 @@ import com.management.stock.repository.StockOrderRepository;
 import com.management.stock.repository.StockRepository;
 import com.management.stock.service.StockService;
 
+import springfox.documentation.swagger2.mappers.ModelMapper;
+
 @Service
 public class StockServiceImpl implements StockService{
 
 	@Autowired
 	StockRepository stockRepository;
 
-
+	
 	@Autowired
 	StockOrderRepository stockOrderRepository;
 
@@ -154,22 +156,37 @@ public class StockServiceImpl implements StockService{
 	}
 	@Override
 	public List<StockHistoryModel> getAllStockOrders(Long userId) throws StockException{
-		List<StockHistoryModel> stockList=new ArrayList<>();
-		
-		stockList=stockOrderRepository.findAllByUserId(userId);
+		List<StockHistoryModel> stockModelList=new ArrayList<>();
+		List<StockOrder> stockList=stockOrderRepository.findAllByUserId(userId);
 		if(stockList.isEmpty())
 			throw new StockException("There is no stock order history for userId : "+userId);
-		return stockList;
+		else {
+			for(StockOrder stockOrder:stockList)
+			{
+				StockHistoryModel stockModel=new StockHistoryModel();
+				stockModel.setStockOrderId(stockOrder.getStockOrderId());
+				stockModel.setTotalPrice(stockOrder.getTotalPrice());
+				stockModel.setUnits(stockOrder.getUnits());
+				stockModelList.add(stockModel);
+			}
+		   
+		}
+		return stockModelList;
 		
 	}
 	@Override
-	public StockOrderModel getStockOrder(Long userId,String symbol) throws StockException{
+	public StockOrderModel getStockOrder(Long stockOrderId) throws StockException{
 		
-		StockOrderModel stockModel=stockOrderRepository.findByUserIdAndSymbol(userId,symbol);
+		Optional<StockOrder> stockOrderList =stockOrderRepository.findById(stockOrderId);
+		if(stockOrderList.isPresent()) {
+		StockOrderModel stackOrderModel=new StockOrderModel();
+		StockOrder stockOrder= stockOrderList.get();
+		BeanUtils.copyProperties(stockOrder, stackOrderModel);
+		return stackOrderModel;
+		}
+		else
+			throw new StockException("There is no stock order history for userId : "+stockOrderId);
 		
-		if(stockModel==null)
-			throw new StockException("There is no stock order history for userId : "+userId);
-		return stockModel;
 		
 
 }

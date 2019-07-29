@@ -23,7 +23,7 @@ public interface StockService
 
 	public List<StockHistoryModel> getAllStockOrders(Long userId) throws StockException;
      
-	public StockOrderModel getStockOrder(Long userId, String symbol) throws StockException;
+	public StockOrderModel getStockOrder(Long stockOrderId) throws StockException;
 	
 	public StockOrderModel processOrder(String status, StockOrderModel order) throws StockException;
 

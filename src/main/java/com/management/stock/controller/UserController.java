@@ -28,7 +28,7 @@ public class UserController {
 	StockService stockService;
 	
 	@GetMapping("/history")
-	public ResponseEntity<ResponseData> getHistory(@RequestParam("User_id")Long userId) throws StockException {
+	public ResponseEntity<ResponseData> getAllHistory(@RequestParam("User_id")Long userId) throws StockException {
 		if(Objects.isNull(userId))
 			throw new StockException("User Id cannot be null");
 		else
@@ -41,16 +41,16 @@ public class UserController {
 			}
 		}
 	
-	@GetMapping("/history/{symbol}")
-	public ResponseEntity<ResponseData> getHistory(@PathVariable("symbol")String symbol,@RequestParam() Long userId) throws StockException {
-		if(symbol.isEmpty())
+	@GetMapping("/history/{stock_order_id}")
+	public ResponseEntity<ResponseData> getHistory(@PathVariable("stock_order_id")Long stockOrderId) throws StockException {
+		if(Objects.isNull(stockOrderId))
 			throw new StockException("User Id cannot be null");
 		else
 		{
-			StockOrderModel stockModel=stockService.getStockOrder(userId,symbol);
+			StockOrderModel stockModel=stockService.getStockOrder(stockOrderId);
 			Map<Integer, String> status = new HashMap();
 			status.put(200, "Successfully fetch");
-            ResponseData response=new ResponseData("Please find below stock order history of userId: "+userId,status,stockModel);
+            ResponseData response=new ResponseData("Please find below stock order history of stock Order Id: "+stockOrderId,status,stockModel);
         	return new ResponseEntity<>(response, HttpStatus.OK);
 				
 			}
