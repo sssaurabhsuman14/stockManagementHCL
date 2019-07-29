@@ -12,6 +12,8 @@ import org.springframework.util.ObjectUtils;
 
 import com.management.stock.entity.Stock;
 import com.management.stock.entity.StockOrder;
+import com.management.stock.exception.StockException;
+import com.management.stock.model.StockHistoryModel;
 import com.management.stock.model.StockModel;
 import com.management.stock.model.StockOrderModel;
 import com.management.stock.repository.StockOrderRepository;
@@ -81,14 +83,7 @@ public class StockServiceImpl implements StockService{
 			return brokarageAmount;
 		}
 
-	@Override
-
-	public List<StockOrder> getAllStockOrders(Long userId){
-		List<StockOrder> stockList=new ArrayList<>();
-		//stockList=stockRepository.findAllByUserId();
-		return stockList;
-
-	}
+	
 
 	public StockModel getQuotationService(Long userId, String symbol, int numberOfUnits, LocalDate quotationDate ) {
 
@@ -142,5 +137,31 @@ public class StockServiceImpl implements StockService{
 		}
 		return stockOrderModel;
 	}
+	@Override
+	public List<StockHistoryModel> getAllStockOrders(Long userId) throws StockException{
+		List<StockHistoryModel> stockList=new ArrayList<>();
+		
+		stockList=stockOrderRepository.findAllByUserId();
+		if(stockList.isEmpty())
+			throw new StockException("There is no stock order history for userId : "+userId);
+		return stockList;
+		
+	}
+	@Override
+	public StockOrderModel getStockOrder(Long userId,String symbol) throws StockException{
+		
+		StockOrderModel stockModel=stockOrderRepository.findByUserIdAndSymbol();
+		
+		if(stockModel==null)
+			throw new StockException("There is no stock order history for userId : "+userId);
+		return stockModel;
+		
 
 }
+
+
+		
+
+}
+
+
