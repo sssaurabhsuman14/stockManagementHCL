@@ -2,6 +2,7 @@ package com.management.stock.serviceImp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +47,31 @@ public class StockServiceImpl implements StockService{
 		
 	}
 
+	
+	//calculate Price for quote as well as order confirmation
+	private Double calculatePrices(String symbol,Double units) {
+		Double totalPrice;
+		Double brockaragePrice;
+		Optional<Stock> optional = stockRepository.findById(symbol);
+		Stock stock=optional.get();
+		
+		brockaragePrice = calclulateBrokarage(units,stock.getPrice());
+		totalPrice = units * stock.getPrice()+ brockaragePrice;
+	
+		return totalPrice;
+	}
 
+	private Double calclulateBrokarage(Double units, Double price) {
+		Double brokarageAmount =null;
+		if(units<= 500) {
+			brokarageAmount= ((0.15D * (units*price))/100);
+		}
+		else if(units>500)
+		{
+			brokarageAmount =  ((0.15D * (500*price))/100);
+			units=units-500;
+			brokarageAmount = brokarageAmount + ((0.10D * (units*price))/100);
+		}
+		return brokarageAmount;
+	}
 }
