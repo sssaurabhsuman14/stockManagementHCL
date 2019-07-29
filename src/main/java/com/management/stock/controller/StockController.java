@@ -53,6 +53,7 @@ public class StockController
 
 	@GetMapping("/quotes/{userId}/{symbol}/{numberOfUnits}")
 	public ResponseEntity<ResponseData> getQuotation(@PathVariable("userId") Long userId, @PathVariable("symbol") String symbol, @PathVariable("numberOfUnits") int numberOfUnits) {
+		
 		StockModel stockModel = stockService.getQuotationService(userId, symbol, numberOfUnits, LocalDate.now());
 		Map<Integer, String> status = new HashMap<>(); 
 		status.put(200, "Successfull fetching ");  

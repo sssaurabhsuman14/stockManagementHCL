@@ -58,27 +58,29 @@ public class StockControllerTest
 	}
 
 
-
-	@Test 
-	public void getQuotation() {
-		
-		  StockModel stockModel = new StockModel(); stockModel.setPrice(100.00);
-		  Mockito.when(stockServiceMock.getQuotationService(1L, "SBIO", 10,
-		  LocalDate.now())).thenReturn(stockModel); ResponseEntity<ResponseData>
-		  response = stockController.getQuotation(1L, "SBIO", 100);
-		  assertNotNull(response); assertEquals(true,
-		  response.getBody().getStatus().containsKey(200));
-		 
-
-	}
-	
 	@Test
 	public void testProcessOrder() throws StockException {
-	 StockOrderModel model = new StockOrderModel();
+		StockOrderModel model = new StockOrderModel();
 		Mockito.when(stockServiceMock.processOrder(Matchers.any(String.class),Matchers.any(StockOrderModel.class))).thenReturn(model);
 		ResponseEntity<ResponseData> response = stockController.processOrder("CONFIRM",new StockOrderModel());
 		assertNotNull(response);
 		assertEquals(true,response.getBody().getStatus().containsKey(200));
+	}
+
+	@Test 
+	public void getQuotation() {
+
+
+		StockModel stockModel = new StockModel(); 
+		stockModel.setPrice(100.00);
+		stockModel.setSymbol("SBI");
+
+		Mockito.when(stockServiceMock.getQuotationService(1L, "SBI", 100, LocalDate.now())).thenReturn(stockModel);
+		ResponseEntity<ResponseData> response = stockController.getQuotation(1L, "SBI", 100);
+		assertNotNull(response); 
+		StockModel model = (StockModel) response.getBody().getData();
+		assertEquals("SBI", model.getSymbol());
+
 	}
 
 
