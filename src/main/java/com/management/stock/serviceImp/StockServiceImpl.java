@@ -118,9 +118,10 @@ public class StockServiceImpl implements StockService{
 
 
 	@Override
-	public StockOrderModel processOrder(String status, StockOrder order) throws StockException {
+	public StockOrderModel processOrder(String status, StockOrderModel order) throws StockException {
 		Stock stock = new Stock();
-		
+		StockOrder stockOrder = new StockOrder();
+		BeanUtils.copyProperties(order,stockOrder);
 		Optional<Stock> optionalStock = stockRepository.findById(order.getSymbol());
 		
 		boolean isOptionalPresent = optionalStock.isPresent();
@@ -139,13 +140,13 @@ public class StockServiceImpl implements StockService{
 			order.setTotalPrice(calculatePrices(stock,Double.valueOf(order.getUnits())));
 			order.setBrokerageFees(calculateBrokarage(Double.valueOf(order.getUnits()), stock.getPrice()));
 			order.setStatus("PENDING");
-			 BeanUtils.copyProperties(stockOrderRepository.save(order),new StockOrderModel());
+			 BeanUtils.copyProperties(stockOrderRepository.save(stockOrder),new StockOrderModel());
 		}
 		else if("CONFIRM".equalsIgnoreCase(status) && stock!=null) {
 			order.setTotalPrice(calculatePrices(stock,Double.valueOf(order.getUnits())));
 			order.setBrokerageFees(calculateBrokarage(Double.valueOf(order.getUnits()), stock.getPrice()));
 			order.setStatus("CONFIRM");
-			BeanUtils.copyProperties(stockOrderRepository.save(order),new StockOrderModel());
+			BeanUtils.copyProperties(stockOrderRepository.save(stockOrder),new StockOrderModel());
 		}
 		return null;
 	}

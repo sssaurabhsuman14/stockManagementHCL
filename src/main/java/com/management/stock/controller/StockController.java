@@ -64,7 +64,7 @@ public class StockController
 	}
 
 	@PostMapping("/order")
-	public ResponseEntity<ResponseData> processOrder(@RequestParam("status") String status,@RequestBody StockOrder order) throws StockException
+	public ResponseEntity<ResponseData> processOrder(@RequestParam("status") String status,@RequestBody StockOrderModel order) throws StockException
 	{
 		StockOrderModel stockOrder = stockService.processOrder(status,order);
 		Map<Integer,String> operationStatus= new HashMap();

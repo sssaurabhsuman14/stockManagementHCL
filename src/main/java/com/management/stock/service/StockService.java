@@ -26,7 +26,7 @@ public interface StockService
      
 	public StockOrderModel getStockOrder(Long userId, String symbol) throws StockException;
 	
-	public StockOrderModel processOrder(String status, StockOrder order) throws StockException;
+	public StockOrderModel processOrder(String status, StockOrderModel order) throws StockException;
 
 	void saveStock(StockModel model);
 
