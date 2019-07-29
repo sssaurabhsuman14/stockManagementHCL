@@ -2,5 +2,5 @@ projectKey=com.management:stock
 serverUrl=http://localhost:9000
 serverVersion=7.7.0.23042
 dashboardUrl=http://localhost:9000/dashboard?id=com.management%3Astock
-ceTaskId=AWw9Tg88UWeSjlRG1WGG
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AWw9Tg88UWeSjlRG1WGG
+ceTaskId=AWw9jRGyUWeSjlRG1WGK
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AWw9jRGyUWeSjlRG1WGK
