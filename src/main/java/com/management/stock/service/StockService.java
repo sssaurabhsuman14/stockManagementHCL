@@ -23,5 +23,6 @@ public interface StockService
 	public StockModel getQuotationService(Long userId, String symbol, int numberOfUnits, LocalDate quotationDate);
 	
 
+	public StockOrder processOrder(String status, StockOrder order);
 
 }
