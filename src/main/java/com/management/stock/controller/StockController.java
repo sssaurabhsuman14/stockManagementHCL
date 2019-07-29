@@ -19,6 +19,8 @@ import com.management.stock.service.StockService;
 import com.management.stock.service.StockService;
 
 
+import com.management.stock.service.StockService;
+
 @RestController
 @RequestMapping("/stocks")
 public class StockController 
