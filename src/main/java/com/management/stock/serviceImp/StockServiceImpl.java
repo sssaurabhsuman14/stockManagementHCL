@@ -100,7 +100,7 @@ public class StockServiceImpl implements StockService{
 
 			Optional<Stock> stockOptional = stockRepository.findById(symbol);
 
-			if (!ObjectUtils.isEmpty(stockOptional)) {
+			if (stockOptional.isPresent()) {
 				stock = stockOptional.get();
 			}
 			if(numberOfUnits<500) {
