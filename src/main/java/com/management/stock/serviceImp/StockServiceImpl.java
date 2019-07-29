@@ -129,26 +129,28 @@ public class StockServiceImpl implements StockService{
 		if(isOptionalPresent)
 		{
 			stock = optionalStock.get();
+			
+			if("PENDING".equalsIgnoreCase(status) ) {
+				
+				stockOrder.setTotalPrice(calculatePrices(stock,Double.valueOf(stockOrder.getUnits())));
+				stockOrder.setBrokerageFees(calculateBrokarage(Double.valueOf(stockOrder.getUnits()), stock.getPrice()));
+				stockOrder.setStatus("PENDING");
+				 BeanUtils.copyProperties(stockOrderRepository.save(stockOrder),new StockOrderModel());
+			}
+			else if("CONFIRM".equalsIgnoreCase(status) ) {
+				stockOrder.setTotalPrice(calculatePrices(stock,Double.valueOf(stockOrder.getUnits())));
+				stockOrder.setBrokerageFees(calculateBrokarage(Double.valueOf(stockOrder.getUnits()), stock.getPrice()));
+				stockOrder.setStatus("CONFIRM");
+				BeanUtils.copyProperties(stockOrderRepository.save(stockOrder),new StockOrderModel());
+			}
 		}
 		else
 		{
 			throw new StockException("Stock is not found with Id : "+order.getSymbol());
 		}
 
-		if("PENDING".equalsIgnoreCase(status) && stock!=null) {
-						
-			order.setTotalPrice(calculatePrices(stock,Double.valueOf(order.getUnits())));
-			order.setBrokerageFees(calculateBrokarage(Double.valueOf(order.getUnits()), stock.getPrice()));
-			order.setStatus("PENDING");
-			 BeanUtils.copyProperties(stockOrderRepository.save(stockOrder),new StockOrderModel());
-		}
-		else if("CONFIRM".equalsIgnoreCase(status) && stock!=null) {
-			order.setTotalPrice(calculatePrices(stock,Double.valueOf(order.getUnits())));
-			order.setBrokerageFees(calculateBrokarage(Double.valueOf(order.getUnits()), stock.getPrice()));
-			order.setStatus("CONFIRM");
-			BeanUtils.copyProperties(stockOrderRepository.save(stockOrder),new StockOrderModel());
-		}
-		return null;
+
+		return order;
 	}
 	@Override
 	public List<StockHistoryModel> getAllStockOrders(Long userId) throws StockException{
