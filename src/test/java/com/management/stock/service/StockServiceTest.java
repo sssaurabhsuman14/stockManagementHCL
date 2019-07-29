@@ -3,6 +3,7 @@ package com.management.stock.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -141,4 +142,18 @@ public class StockServiceTest
 		assertNotNull(processOrderModel);
 		assertEquals("PENDING", processOrderModel.getStatus());
 	}
+	@Test
+	public void testGetQuotationService() {
+		Stock stock = new Stock();
+		stock.setPrice(100.00);
+		stock.setName("ABC");
+		stock.setSymbol("SBIO");
+		Optional<Stock> stockOptional =  Optional.of(stock);
+
+		Mockito.when(stockRepositoryMock.findById("SBIO")).thenReturn(stockOptional);
+		StockModel stockModel = stockServiceImpl.getQuotationService(1L, "SBIO",  100, LocalDate.now());
+		assertNotNull(stockModel);
+		assertEquals(stockOptional.get().getName(),stockModel.getName());
+	}
 }
+
