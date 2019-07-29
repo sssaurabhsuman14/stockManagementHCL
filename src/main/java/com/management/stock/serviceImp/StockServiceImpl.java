@@ -32,22 +32,22 @@ public class StockServiceImpl implements StockService{
 	StockOrderRepository stockOrderRepository;
 
 	@Override
-	public List<StockModel> getAllStock() 
+	public List<StockModel> getAllStock() throws StockException 
 	{
 		List<StockModel> stockModelList = new ArrayList<>();
 
 		List<Stock> stockList = stockRepository.findAll();
 
 		if(stockList.isEmpty())
-		{}
+			throw new StockException("N stocks are available");
 		else
 			stockModelList = entityListToModelList(stockList, stockModelList);
 
 		return stockModelList;
 	}
 
-	@Override
-	public List<StockModel> entityListToModelList(List<Stock> stockList, List<StockModel> stockModelList) 
+	
+	private List<StockModel> entityListToModelList(List<Stock> stockList, List<StockModel> stockModelList) 
 	{
 		for(Stock entity : stockList)
 		{
