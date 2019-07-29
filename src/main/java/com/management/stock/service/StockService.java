@@ -20,7 +20,7 @@ public interface StockService
 
     public List<StockOrder> getAllStockOrders(Long userId);
 
-	public StockModel getQuotationService(Long userId, Long stockId, int numberOfUnits, LocalDate quotationDate);
+	public StockModel getQuotationService(Long userId, String symbol, int numberOfUnits, LocalDate quotationDate);
 	
 
 

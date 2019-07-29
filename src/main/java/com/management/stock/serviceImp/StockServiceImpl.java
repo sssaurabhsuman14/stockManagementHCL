@@ -26,11 +26,11 @@ public class StockServiceImpl implements StockService{
 	public List<StockModel> getAllStock() 
 	{
 		List<StockModel> stockModelList = new ArrayList<>();
-		
+
 		List<Stock> stockList = stockRepository.findAll();
 
 		if(stockList.isEmpty())
-			{}
+		{}
 		else
 			stockModelList = entityListToModelList(stockList, stockModelList);
 
@@ -47,20 +47,20 @@ public class StockServiceImpl implements StockService{
 			stockModelList.add(model);
 		}
 		return stockModelList;
-		
+
 	}
 
-	
+
 	//calculate Price for quote as well as order confirmation
 	private Double calculatePrices(String symbol,Double units) {
 		Double totalPrice;
 		Double brockaragePrice;
 		Optional<Stock> optional = stockRepository.findById(symbol);
 		Stock stock=optional.get();
-		
+
 		brockaragePrice = calclulateBrokarage(units,stock.getPrice());
 		totalPrice = units * stock.getPrice()+ brockaragePrice;
-	
+
 		return totalPrice;
 	}
 
@@ -77,7 +77,7 @@ public class StockServiceImpl implements StockService{
 		}
 		return brokarageAmount;
 	}
-	
+
 	@Override
 
 	public List<StockOrder> getAllStockOrders(Long userId){
@@ -87,24 +87,26 @@ public class StockServiceImpl implements StockService{
 		
 	}
 
-	public StockModel getQuotationService(Long userId, Long stockId, int numberOfUnits, LocalDate quotationDate ) {
+	public StockModel getQuotationService(Long userId, String symbol, int numberOfUnits, LocalDate quotationDate ) {
 
 		Double fees = 0.00;
-		Stock stock = new Stock();
 		StockModel stockModel = new StockModel();
-		if(!(ObjectUtils.isEmpty(userId) && ObjectUtils.isEmpty(stockId))) {
+		if(!(ObjectUtils.isEmpty(userId) && ObjectUtils.isEmpty(symbol))) {
 
-			stock = stockRepository.findOne(stockId);
-			if(numberOfUnits<500) {
-				fees = 0.10 * numberOfUnits * stock.getPrice();//logic to get it according to date
+			Optional<Stock> stock = stockRepository.findById(symbol);
+			if (ObjectUtils.isEmpty(stock)) {
+				if(numberOfUnits<500) {
+					fees = 0.10D * numberOfUnits * stock.get().getPrice();//logic to get it according to date
+				}
+				else {
+					fees = 0.15D * 500 * stock.get().getPrice() + (0.10D *  (numberOfUnits-500)*  stock.get().getPrice());
+
+				}
+				stockModel.setTotalCharge(stock.get().getPrice() + fees); 
+				BeanUtils.copyProperties(stock, stockModel);
 			}
-			else {
-				fees = 0.15 * numberOfUnits * stock.getPrice();
-			}
-			stockModel.setTotalCharge(stock.getPrice() + fees); 
 		}
 
-		BeanUtils.copyProperties(stock, stockModel);
 		return null;
 	}
 

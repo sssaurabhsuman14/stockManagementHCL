@@ -1,5 +1,6 @@
 package com.management.stock.controller;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,38 +34,38 @@ public class StockController
 	@Autowired
 	StockService stockService;
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	@GetMapping("/all")
-	public ResponseEntity<ResponseData> showAllStock() {
-		List<StockModel> allStockList = stockService.getAllStock();
-		Map<Integer, String> status = new HashMap();
-		status.put(200, "Successfull fetch");
-		ResponseData response = new ResponseData("Stock List", status, allStockList);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-	
-	@GetMapping("/quotes")
-	public void getQuotation() {
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+	@GetMapping("/all") public ResponseEntity<ResponseData> showAllStock() {
+		List<StockModel> allStockList = stockService.getAllStock(); Map<Integer,
+		String> status = new HashMap(); status.put(200, "Successfull fetch");
+		ResponseData response = new ResponseData("Stock List", status, allStockList);
+		return new ResponseEntity<>(response, HttpStatus.OK); }
+
+
+	@GetMapping("/quotes")
+	public void getQuotation(@PathVariable("userId") Long userId, @PathVariable("symbol") String symbol, @PathVariable("numberOfUnits") int numberOfUnits) {
+		StockModel stockModel = stockService.getQuotationService(userId, symbol, numberOfUnits, LocalDate.now());
 	}
 
 	@PostMapping("/order")
 	public ResponseEntity<StockOrder> processOrder(@RequestParam("status") String status,@RequestBody StockOrder order)
 	{
-		
+
 		return null;
 	}
-	
+
+
 }

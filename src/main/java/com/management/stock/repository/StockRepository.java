@@ -13,7 +13,6 @@ public interface StockRepository extends JpaRepository<Stock, String>{
 
 
 	List<StockOrder> findAllByUserId();
-	Stock findOne(Long stockId);
 
 
 }
