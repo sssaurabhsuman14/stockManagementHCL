@@ -13,6 +13,7 @@ import org.springframework.util.ObjectUtils;
 import com.management.stock.entity.Stock;
 import com.management.stock.entity.StockOrder;
 import com.management.stock.model.StockModel;
+import com.management.stock.repository.StockOrderRepository;
 import com.management.stock.repository.StockRepository;
 import com.management.stock.service.StockService;
 
