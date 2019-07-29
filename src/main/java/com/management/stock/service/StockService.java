@@ -30,5 +30,7 @@ public interface StockService
 	
 	public StockOrderModel processOrder(String status, StockOrder order);
 
+	void saveStock(StockModel model);
+
 
 }

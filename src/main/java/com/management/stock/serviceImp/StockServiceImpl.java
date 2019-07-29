@@ -159,7 +159,15 @@ public class StockServiceImpl implements StockService{
 
 }
 
+	@Override
+	public void saveStock(StockModel model) {
+	 if (model != null) {
+	  Stock entity = new Stock();
+	  BeanUtils.copyProperties(model, entity);
+	  stockRepository.save(entity);
+	 }
 
+	}
 		
 
 }
