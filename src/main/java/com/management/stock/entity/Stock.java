@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalTime;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +18,7 @@ public class Stock implements Serializable{
 
 	private static final long serialVersionUID = -1563307638290991874L;
 	
+	@Id
 	private String  symbol;
 	private String  name;
 	private String  type;
