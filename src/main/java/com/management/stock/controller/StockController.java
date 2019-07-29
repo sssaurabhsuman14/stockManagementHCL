@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.management.stock.entity.StockOrder;
 import com.management.stock.exception.StockException;
 import com.management.stock.model.ResponseData;
 import com.management.stock.model.StockModel;

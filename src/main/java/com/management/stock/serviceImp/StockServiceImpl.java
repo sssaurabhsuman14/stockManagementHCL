@@ -13,15 +13,12 @@ import org.springframework.util.ObjectUtils;
 import com.management.stock.entity.Stock;
 import com.management.stock.entity.StockOrder;
 import com.management.stock.exception.StockException;
-import com.management.stock.exception.StockException;
 import com.management.stock.model.StockHistoryModel;
 import com.management.stock.model.StockModel;
 import com.management.stock.model.StockOrderModel;
 import com.management.stock.repository.StockOrderRepository;
 import com.management.stock.repository.StockRepository;
 import com.management.stock.service.StockService;
-
-import springfox.documentation.swagger2.mappers.ModelMapper;
 
 @Service
 public class StockServiceImpl implements StockService{
@@ -92,8 +89,7 @@ public class StockServiceImpl implements StockService{
 		public StockModel getQuotationService(Long userId, String symbol, int numberOfUnits, LocalDate quotationDate ) {
 
 			 StockModel stockModel = new StockModel();
-
-			 Double fees = 0.00;
+			 Double fees;
 			 Stock stock = new Stock();
 			 if(!(ObjectUtils.isEmpty(userId) && ObjectUtils.isEmpty(symbol))) {
 
@@ -121,7 +117,7 @@ public class StockServiceImpl implements StockService{
 
 	@Override
 	public StockOrderModel processOrder(String status, StockOrderModel order) throws StockException {
-		Stock stock = new Stock();
+		Stock stock;
 		StockOrder stockOrder = new StockOrder();
 		BeanUtils.copyProperties(order,stockOrder);
 		Optional<Stock> optionalStock = stockRepository.findById(order.getSymbol());
