@@ -60,7 +60,7 @@ public class StockServiceTest
 	@Test(expected = StockException.class)
 	public void testGetAllStockFailure() throws StockException
 	{
-		stockList.remove(0);
+		List<Stock> stockList = new ArrayList<>();
 		Mockito.when(stockRepositoryMock.findAll()).thenReturn(stockList);
 		stockServiceImpl.getAllStock();
 
