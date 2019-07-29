@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.management.stock.exception.StockException;
 import com.management.stock.model.ResponseData;
 import com.management.stock.model.StockHistoryModel;
-import com.management.stock.model.StockModel;
 import com.management.stock.model.StockOrderModel;
 import com.management.stock.service.StockService;
 
+@RestController
+@RequestMapping("/user")
 public class UserController {
 
 	@Autowired
