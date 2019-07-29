@@ -9,5 +9,7 @@ public class StockException extends Exception{
 		super(arg0);
 	}
 
-	
+	public StockException() {
+		super();
+	}
 }

@@ -82,32 +82,38 @@ public class StockServiceImpl implements StockService{
 
 	public List<StockOrder> getAllStockOrders(Long userId){
 		List<StockOrder> stockList=new ArrayList<>();
-		stockList=stockRepository.findAllByUserId();
+		//stockList=stockRepository.findAllByUserId();
 		return stockList;
-		
+
 	}
 
 	public StockModel getQuotationService(Long userId, String symbol, int numberOfUnits, LocalDate quotationDate ) {
 
-		Double fees = 0.00;
 		StockModel stockModel = new StockModel();
+
+		Double fees = 0.00;
+		Stock stock = new Stock();
 		if(!(ObjectUtils.isEmpty(userId) && ObjectUtils.isEmpty(symbol))) {
 
-			Optional<Stock> stock = stockRepository.findById(symbol);
-			if (ObjectUtils.isEmpty(stock)) {
-				if(numberOfUnits<500) {
-					fees = 0.10D * numberOfUnits * stock.get().getPrice();//logic to get it according to date
-				}
-				else {
-					fees = 0.15D * 500 * stock.get().getPrice() + (0.10D *  (numberOfUnits-500)*  stock.get().getPrice());
+			Optional<Stock> stockOptional = stockRepository.findById(symbol);
 
-				}
-				stockModel.setTotalCharge(stock.get().getPrice() + fees); 
-				BeanUtils.copyProperties(stock, stockModel);
+			if (!ObjectUtils.isEmpty(stockOptional)) {
+				stock = stockOptional.get();
 			}
+			if(numberOfUnits<500) {
+				fees = (0.10D * numberOfUnits * stock.getPrice())/100;//logic to get it according to date
+			}
+			else {
+				fees = (0.15D * 500 * stock.getPrice() + (0.10D *  (numberOfUnits-500)*  stock.getPrice()))/100;
+
+			}
+
+			BeanUtils.copyProperties(stock, stockModel);
+			stockModel.setTotalCharge(stock.getPrice()+ fees);
+
 		}
 
-		return null;
+		return stockModel;
 	}
 
 }
