@@ -2,6 +2,8 @@ package com.management.stock.controller;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+
+import org.hibernate.hql.internal.ast.tree.ResultVariableRefNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +64,7 @@ public class StockController
 	}
 
 	@PostMapping("/order")
-	public ResponseEntity<StockOrderModel> processOrder(@RequestParam("status") String status,@RequestBody StockOrder order)
+	public ResponseEntity<ResponseData> processOrder(@RequestParam("status") String status,@RequestBody StockOrder order)
 	{
 		StockOrderModel stockOrder = stockService.processOrder(status,order);
 		Map<Integer,String> operationStatus= new HashMap();
@@ -70,8 +72,7 @@ public class StockController
 			operationStatus.put(200,"Order Processed Successfully");
 		}
 		ResponseData response = new ResponseData("Process Order", operationStatus, stockOrder);
-		
-		return null;
+	 return new ResponseEntity<>(response,HttpStatus.OK);	
 	}
 
 
