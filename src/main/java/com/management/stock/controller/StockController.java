@@ -2,9 +2,6 @@ package com.management.stock.controller;
 
 import java.time.LocalDate;
 import java.util.HashMap;
-
-import org.hibernate.hql.internal.ast.tree.ResultVariableRefNode;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +54,7 @@ public class StockController
 	@GetMapping("/quotes/{userId}/{symbol}/{numberOfUnits}")
 	public ResponseEntity<ResponseData> getQuotation(@PathVariable("userId") Long userId, @PathVariable("symbol") String symbol, @PathVariable("numberOfUnits") int numberOfUnits) {
 		StockModel stockModel = stockService.getQuotationService(userId, symbol, numberOfUnits, LocalDate.now());
-		Map<Integer, String> status = new HashMap<Integer, String>(); 
+		Map<Integer, String> status = new HashMap<>(); 
 		status.put(200, "Successfull fetching ");  
 
 		ResponseData response = new ResponseData("Stock Quotes ",
