@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.management.stock.entity.Stock;
+import com.management.stock.entity.StockOrder;
 import com.management.stock.model.StockModel;
 import com.management.stock.repository.StockRepository;
 import com.management.stock.service.StockService;
@@ -73,5 +74,13 @@ public class StockServiceImpl implements StockService{
 			brokarageAmount = brokarageAmount + ((0.10D * (units*price))/100);
 		}
 		return brokarageAmount;
+	}
+	
+	@Override
+	public List<StockOrder> getAllStockOrders(Long userId){
+		List<StockOrder> stockList=new ArrayList<>();
+		stockList=stockRepository.findAllByUserId();
+		return stockList;
+		
 	}
 }
