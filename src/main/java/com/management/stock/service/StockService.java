@@ -24,6 +24,6 @@ public interface StockService
 	public StockModel getQuotationService(Long userId, String symbol, int numberOfUnits, LocalDate quotationDate);
 
 
-	public StockOrderModel processOrder(String status, StockOrder order);
+	public StockOrderModel processOrder(String status, StockOrder order) throws StockException;
 
 }

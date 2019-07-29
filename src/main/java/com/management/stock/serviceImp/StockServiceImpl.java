@@ -12,6 +12,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.management.stock.entity.Stock;
 import com.management.stock.entity.StockOrder;
+import com.management.stock.exception.StockException;
 import com.management.stock.model.StockModel;
 import com.management.stock.model.StockOrderModel;
 import com.management.stock.repository.StockOrderRepository;
@@ -92,55 +93,65 @@ public class StockServiceImpl implements StockService{
 
 	public StockModel getQuotationService(Long userId, String symbol, int numberOfUnits, LocalDate quotationDate ) {
 
-		StockModel stockModel = new StockModel();
+		 StockModel stockModel = new StockModel();
 
-		Double fees = 0.00;
-		Stock stock = new Stock();
-		if(!(ObjectUtils.isEmpty(userId) && ObjectUtils.isEmpty(symbol))) {
+		 Double fees = 0.00;
+		 Stock stock = new Stock();
+		 if(!(ObjectUtils.isEmpty(userId) && ObjectUtils.isEmpty(symbol))) {
 
-			Optional<Stock> stockOptional = stockRepository.findById(symbol);
+		  Optional<Stock> stockOptional = stockRepository.findById(symbol);
 
-			if (stockOptional.isPresent()) {
-				stock = stockOptional.get();
-			}
-			if(numberOfUnits<500) {
-				fees = (0.10D * numberOfUnits * stock.getPrice())/100;//logic to get it according to date
-			}
-			else {
-				fees = (0.15D * 500 * stock.getPrice() + (0.10D *  (numberOfUnits-500)*  stock.getPrice()))/100;
+		  if (stockOptional.isPresent()) {
+		   stock = stockOptional.get();
+		  }
+		  if(numberOfUnits<500) {
+		   fees = (0.10D * numberOfUnits * stock.getPrice())/100;//logic to get it according to date
+		  }
+		  else {
+		   fees = (0.15D * 500 * stock.getPrice() + (0.10D *  (numberOfUnits-500)*  stock.getPrice()))/100;
 
-			}
+		  }
 
-			BeanUtils.copyProperties(stock, stockModel);
-			stockModel.setTotalCharge(stock.getPrice()+ fees);
+		  BeanUtils.copyProperties(stock, stockModel);
+		  stockModel.setTotalCharge(stock.getPrice()+ fees);
 
+		 }
+
+		 return stockModel;
 		}
 
-		return stockModel;
-	}
-	
+
 	@Override
-	public StockOrderModel processOrder(String status, StockOrder order) {
-		StockOrderModel stockOrderModel = new StockOrderModel();
-		Optional<Stock> optional = stockRepository.findById(order.getSymbol());
-		Stock stock=optional.isPresent()?optional.get():null;
+	public StockOrderModel processOrder(String status, StockOrder order) throws StockException {
+		Stock stock = new Stock();
 		
+		Optional<Stock> optionalStock = stockRepository.findById(order.getSymbol());
+		
+		boolean isOptionalPresent = optionalStock.isPresent();
+		
+		if(isOptionalPresent)
+		{
+			stock = optionalStock.get();
+		}
+		else
+		{
+			throw new StockException("Stock is not found with Id : "+order.getSymbol());
+		}
+
 		if("PENDING".equalsIgnoreCase(status) && stock!=null) {
 						
 			order.setTotalPrice(calculatePrices(stock,Double.valueOf(order.getUnits())));
 			order.setBrokerageFees(calculateBrokarage(Double.valueOf(order.getUnits()), stock.getPrice()));
 			order.setStatus("PENDING");
-			BeanUtils.copyProperties(stockOrderRepository.save(order),stockOrderModel);
-			return stockOrderModel;
+			 BeanUtils.copyProperties(stockOrderRepository.save(order),new StockOrderModel());
 		}
 		else if("CONFIRM".equalsIgnoreCase(status) && stock!=null) {
 			order.setTotalPrice(calculatePrices(stock,Double.valueOf(order.getUnits())));
 			order.setBrokerageFees(calculateBrokarage(Double.valueOf(order.getUnits()), stock.getPrice()));
 			order.setStatus("CONFIRM");
-			BeanUtils.copyProperties(stockOrderRepository.save(order),stockOrderModel);
-			return stockOrderModel;
+			BeanUtils.copyProperties(stockOrderRepository.save(order),new StockOrderModel());
 		}
-		return stockOrderModel;
+		return null;
 	}
 
 }
