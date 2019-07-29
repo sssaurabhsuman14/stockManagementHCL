@@ -9,9 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.management.stock.entity.StockOrder;
 import com.management.stock.model.ResponseData;
 import com.management.stock.model.StockModel;
 import com.management.stock.service.StockService;
@@ -50,5 +54,11 @@ public class StockController
 
 	}
 
+	@PostMapping("/order")
+	public ResponseEntity<StockOrder> processOrder(@RequestParam("status") String status,@RequestBody StockOrder order)
+	{
+		
+		return null;
+	}
 	
 }
