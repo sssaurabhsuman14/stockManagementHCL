@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.management.stock.entity.StockOrder;
 import com.management.stock.model.ResponseData;
 import com.management.stock.model.StockModel;
+import com.management.stock.model.StockOrderModel;
 import com.management.stock.service.StockService;
 import com.management.stock.service.StockService;
 
@@ -61,9 +62,15 @@ public class StockController
 	}
 
 	@PostMapping("/order")
-	public ResponseEntity<StockOrder> processOrder(@RequestParam("status") String status,@RequestBody StockOrder order)
+	public ResponseEntity<StockOrderModel> processOrder(@RequestParam("status") String status,@RequestBody StockOrder order)
 	{
-
+		StockOrderModel stockOrder = stockService.processOrder(status,order);
+		Map<Integer,String> operationStatus= new HashMap();
+		if(stockOrder !=null) {
+			operationStatus.put(200,"Order Processed Successfully");
+		}
+		ResponseData response = new ResponseData("Process Order", operationStatus, stockOrder);
+		
 		return null;
 	}
 

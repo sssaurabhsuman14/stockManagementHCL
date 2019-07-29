@@ -13,6 +13,7 @@ import org.springframework.util.ObjectUtils;
 import com.management.stock.entity.Stock;
 import com.management.stock.entity.StockOrder;
 import com.management.stock.model.StockModel;
+import com.management.stock.model.StockOrderModel;
 import com.management.stock.repository.StockOrderRepository;
 import com.management.stock.repository.StockRepository;
 import com.management.stock.service.StockService;
@@ -113,7 +114,7 @@ public class StockServiceImpl implements StockService{
 	}
 	
 	@Override
-	public StockOrder processOrder(String status, StockOrder order) {
+	public StockOrderModel processOrder(String status, StockOrder order) {
 		Optional<Stock> optional = stockRepository.findById(order.getSymbol());
 		Stock stock=optional.isPresent()?optional.get():null;
 		
@@ -122,13 +123,13 @@ public class StockServiceImpl implements StockService{
 			order.setTotalPrice(calculatePrices(stock,Double.valueOf(order.getUnits())));
 			order.setBrokerageFees(calculateBrokarage(Double.valueOf(order.getUnits()), stock.getPrice()));
 			order.setStatus("PENDING");
-			return stockOrderRepository.save(order);
+			 BeanUtils.copyProperties(stockOrderRepository.save(order),new StockOrderModel());
 		}
 		else if("CONFIRM".equalsIgnoreCase(status)) {
 			order.setTotalPrice(calculatePrices(stock,Double.valueOf(order.getUnits())));
 			order.setBrokerageFees(calculateBrokarage(Double.valueOf(order.getUnits()), stock.getPrice()));
 			order.setStatus("CONFIRM");
-		return	stockOrderRepository.save(order);
+			BeanUtils.copyProperties(stockOrderRepository.save(order),new StockOrderModel());
 		}
 		return null;
 	}
