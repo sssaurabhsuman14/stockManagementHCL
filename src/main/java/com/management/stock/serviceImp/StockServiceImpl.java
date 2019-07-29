@@ -13,6 +13,8 @@ import org.springframework.util.ObjectUtils;
 import com.management.stock.entity.Stock;
 import com.management.stock.entity.StockOrder;
 import com.management.stock.model.StockModel;
+import com.management.stock.model.StockOrderModel;
+import com.management.stock.repository.StockOrderRepository;
 import com.management.stock.repository.StockRepository;
 import com.management.stock.service.StockService;
 
@@ -21,6 +23,10 @@ public class StockServiceImpl implements StockService{
 
 	@Autowired
 	StockRepository stockRepository;
+
+
+	@Autowired
+	StockOrderRepository stockOrderRepository;
 
 	@Override
 	public List<StockModel> getAllStock() 
@@ -52,31 +58,28 @@ public class StockServiceImpl implements StockService{
 
 
 	//calculate Price for quote as well as order confirmation
-	private Double calculatePrices(String symbol,Double units) {
-		Double totalPrice;
-		Double brockaragePrice;
-		Optional<Stock> optional = stockRepository.findById(symbol);
-		Stock stock=optional.get();
-
-		brockaragePrice = calclulateBrokarage(units,stock.getPrice());
-		totalPrice = units * stock.getPrice()+ brockaragePrice;
-
-		return totalPrice;
-	}
-
-	private Double calclulateBrokarage(Double units, Double price) {
-		Double brokarageAmount =null;
-		if(units<= 500) {
-			brokarageAmount= ((0.15D * (units*price))/100);
+		private Double calculatePrices(Stock stock,Double units) {
+			Double totalPrice;
+			Double brockaragePrice;
+			brockaragePrice = calculateBrokarage(units,stock.getPrice());
+			totalPrice = units * stock.getPrice()+ brockaragePrice;
+		
+			return totalPrice;
 		}
-		else if(units>500)
-		{
-			brokarageAmount =  ((0.15D * (500*price))/100);
-			units=units-500;
-			brokarageAmount = brokarageAmount + ((0.10D * (units*price))/100);
+
+		private Double calculateBrokarage(Double units, Double price) {
+			Double brokarageAmount =null;
+			if(units<= 500) {
+				brokarageAmount= ((0.15D * (units*price))/100);
+			}
+			else if(units>500)
+			{
+				brokarageAmount =  ((0.15D * (500*price))/100);
+				units=units-500;
+				brokarageAmount = brokarageAmount + ((0.10D * (units*price))/100);
+			}
+			return brokarageAmount;
 		}
-		return brokarageAmount;
-	}
 
 	@Override
 
@@ -107,6 +110,27 @@ public class StockServiceImpl implements StockService{
 			}
 		}
 
+		return null;
+	}
+	
+	@Override
+	public StockOrderModel processOrder(String status, StockOrder order) {
+		Optional<Stock> optional = stockRepository.findById(order.getSymbol());
+		Stock stock=optional.isPresent()?optional.get():null;
+		
+		if("PENDING".equalsIgnoreCase(status) && stock!=null) {
+						
+			order.setTotalPrice(calculatePrices(stock,Double.valueOf(order.getUnits())));
+			order.setBrokerageFees(calculateBrokarage(Double.valueOf(order.getUnits()), stock.getPrice()));
+			order.setStatus("PENDING");
+			 BeanUtils.copyProperties(stockOrderRepository.save(order),new StockOrderModel());
+		}
+		else if("CONFIRM".equalsIgnoreCase(status) && stock!=null) {
+			order.setTotalPrice(calculatePrices(stock,Double.valueOf(order.getUnits())));
+			order.setBrokerageFees(calculateBrokarage(Double.valueOf(order.getUnits()), stock.getPrice()));
+			order.setStatus("CONFIRM");
+			BeanUtils.copyProperties(stockOrderRepository.save(order),new StockOrderModel());
+		}
 		return null;
 	}
 
