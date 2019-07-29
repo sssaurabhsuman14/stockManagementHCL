@@ -2,10 +2,6 @@ package com.management.stock.model;
 
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
-
-import com.management.stock.entity.Stock;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

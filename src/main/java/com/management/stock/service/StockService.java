@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.management.stock.entity.Stock;
-import com.management.stock.entity.StockOrder;
 import com.management.stock.exception.StockException;
 import com.management.stock.model.StockHistoryModel;
 import com.management.stock.model.StockModel;
