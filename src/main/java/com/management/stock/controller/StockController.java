@@ -2,6 +2,9 @@ package com.management.stock.controller;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+
+import org.hibernate.hql.internal.ast.tree.ResultVariableRefNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.management.stock.entity.StockOrder;
+import com.management.stock.exception.StockException;
 import com.management.stock.model.ResponseData;
 import com.management.stock.model.StockModel;
+import com.management.stock.model.StockOrderModel;
 import com.management.stock.service.StockService;
 
 @RestController
@@ -28,10 +33,22 @@ public class StockController
 	@Autowired
 	StockService stockService;
 
-	@GetMapping("/all") public ResponseEntity<ResponseData> showAllStock() {
-		List<StockModel> allStockList = stockService.getAllStock(); 
-		Map<Integer,String> status = new HashMap(); 
-		status.put(200, "Successfull fetch");
+
+
+
+
+
+
+
+
+
+
+
+
+
+	@GetMapping("/all") public ResponseEntity<ResponseData> showAllStock() throws StockException {
+		List<StockModel> allStockList = stockService.getAllStock(); Map<Integer,
+		String> status = new HashMap(); status.put(200, "Successfull fetch");
 		ResponseData response = new ResponseData("Stock List", status, allStockList);
 		return new ResponseEntity<>(response, HttpStatus.OK); 
 	}
@@ -50,10 +67,15 @@ public class StockController
 	}
 
 	@PostMapping("/order")
-	public ResponseEntity<StockOrder> processOrder(@RequestParam("status") String status,@RequestBody StockOrder order)
+	public ResponseEntity<ResponseData> processOrder(@RequestParam("status") String status,@RequestBody StockOrder order)
 	{
-
-		return null;
+		StockOrderModel stockOrder = stockService.processOrder(status,order);
+		Map<Integer,String> operationStatus= new HashMap();
+		if(stockOrder !=null) {
+			operationStatus.put(200,"Order Processed Successfully");
+		}
+		ResponseData response = new ResponseData("Process Order", operationStatus, stockOrder);
+	 return new ResponseEntity<>(response,HttpStatus.OK);	
 	}
 
 
