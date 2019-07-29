@@ -20,7 +20,7 @@ import com.management.stock.service.StockService;
 
 
 @RestController
-@RequestMapping("/stock")
+@RequestMapping("/stocks")
 public class StockController 
 {
 	@Autowired
@@ -48,5 +48,10 @@ public class StockController
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	@GetMapping("/quotes")
+	public void getQuotation() {
+
+	}
+
 	
 }

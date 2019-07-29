@@ -8,4 +8,6 @@ import com.management.stock.entity.Stock;
 @Repository
 public interface StockRepository extends JpaRepository<Stock, String>{
 
+	Stock findOne(Long stockId);
+
 }
