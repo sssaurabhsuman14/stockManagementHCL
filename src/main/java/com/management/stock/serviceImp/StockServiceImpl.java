@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.management.stock.entity.Stock;
+import com.management.stock.entity.StockOrder;
 import com.management.stock.model.StockModel;
 import com.management.stock.repository.StockRepository;
 import com.management.stock.service.StockService;
@@ -78,6 +79,14 @@ public class StockServiceImpl implements StockService{
 	}
 	
 	@Override
+
+	public List<StockOrder> getAllStockOrders(Long userId){
+		List<StockOrder> stockList=new ArrayList<>();
+		stockList=stockRepository.findAllByUserId();
+		return stockList;
+		
+	}
+
 	public StockModel getQuotationService(Long userId, Long stockId, int numberOfUnits, LocalDate quotationDate ) {
 
 		Double fees = 0.00;
