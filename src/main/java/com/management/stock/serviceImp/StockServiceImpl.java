@@ -40,9 +40,9 @@ public class StockServiceImpl implements StockService{
 		if(stockList.isEmpty())
 			throw new StockException("N stocks are available");
 		else
-			stockModelList = entityListToModelList(stockList, stockModelList);
+			return entityListToModelList(stockList, stockModelList);
 
-		return stockModelList;
+		
 	}
 
 	
