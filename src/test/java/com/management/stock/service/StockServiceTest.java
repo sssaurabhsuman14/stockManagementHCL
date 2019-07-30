@@ -16,10 +16,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.stubbing.OngoingStubbing;
 
 import com.management.stock.entity.Stock;
 import com.management.stock.entity.StockOrder;
 import com.management.stock.exception.StockException;
+import com.management.stock.model.StockHistoryModel;
 import com.management.stock.model.StockModel;
 import com.management.stock.model.StockOrderModel;
 import com.management.stock.repository.StockOrderRepository;
@@ -46,6 +48,12 @@ public class StockServiceTest
 	Optional<Stock> stockOptional = Optional.of(stock1);
 	StockOrder order1 = new StockOrder();
 	StockOrderModel orderModel1 = new StockOrderModel();
+    Optional<StockOrder> optionalList =Optional.of(order1);
+	List<StockHistoryModel> stockOrderList;
+	List<StockOrder> stockOrder;
+	StockHistoryModel model;
+	
+	StockOrderModel orderModel;
 	
 	@Before
 	public void setUp()
@@ -67,6 +75,25 @@ public class StockServiceTest
 		orderModel1.setStockOrderId(1L);
 		orderModel1.setStatus("PENDING");
 		orderModel1.setUnits(500);
+		
+		stockOrderList =new ArrayList<>();
+		model=new StockHistoryModel();
+		model.setStockOrderId(123L);
+		model.setTotalPrice(345.5);
+		model.setUnits(23);
+		stockOrderList.add(model);
+		
+		stockOrder =new ArrayList<>();
+	    orderModel=new StockOrderModel();
+		orderModel.setBookingPrice(1234);
+		orderModel.setBrokerageFees(1234);
+		orderModel.setStatus("completed");
+		orderModel.setStockOrderId(1L);
+		orderModel.setSymbol("SBI");
+		orderModel.setTotalPrice(1234);
+		orderModel.setUnits(23);
+		orderModel.setUserId(1L);
+		stockOrder.add(order1);
 	}
 	
 	@Test
@@ -155,5 +182,36 @@ public class StockServiceTest
 		assertNotNull(stockModel);
 		assertEquals(stockOptional.get().getName(),stockModel.getName());
 	}
+	
+	@Test
+	public void testGetAllStockOrders() throws StockException
+	{
+		Long userId=1L;
+		Mockito.when(stockOrderRepositoryMock.findAllByUserId(userId)).thenReturn(stockOrder);
+		List<StockHistoryModel> stockHistoryList=stockServiceImpl.getAllStockOrders(userId);
+		assertNotNull(stockHistoryList);
+		
+	}
+	
+	@Test(expected = StockException.class)
+	public void failureTestGetAllStockOrders() throws StockException
+	{
+		List<StockHistoryModel> stockHistoryList=stockServiceImpl.getAllStockOrders(null);
+	}
+
+	public void testGetStockOrder() throws StockException {
+		
+		Long stockOrderId=1L;
+		Mockito.when(stockOrderRepositoryMock.findById(stockOrderId)).thenReturn(optionalList);
+		orderModel1=stockServiceImpl.getStockOrder(stockOrderId);
+		assertNotNull(orderModel1);
+	}
+	
+	@Test(expected = StockException.class)
+	public void failureTestGetStockOrder() throws StockException
+	{
+		orderModel1=stockServiceImpl.getStockOrder(null);
+	}
 }
+
 
