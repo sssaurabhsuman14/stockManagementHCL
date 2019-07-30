@@ -119,6 +119,7 @@ public class StockServiceImpl implements StockService{
 	public StockOrderModel processOrder(String status, StockOrderModel order) throws StockException {
 		Stock stock;
 		StockOrder stockOrder = new StockOrder();
+		StockOrderModel stockOrderModel = new StockOrderModel();
 		BeanUtils.copyProperties(order,stockOrder);
 		Optional<Stock> optionalStock = stockRepository.findById(order.getSymbol());
 		
@@ -133,13 +134,13 @@ public class StockServiceImpl implements StockService{
 				stockOrder.setTotalPrice(calculatePrices(stock,Double.valueOf(stockOrder.getUnits())));
 				stockOrder.setBrokerageFees(calculateBrokarage(Double.valueOf(stockOrder.getUnits()), stock.getPrice()));
 				stockOrder.setStatus("PENDING");
-				 BeanUtils.copyProperties(stockOrderRepository.save(stockOrder),new StockOrderModel());
+				 BeanUtils.copyProperties(stockOrderRepository.save(stockOrder),stockOrderModel);
 			}
 			else if("CONFIRM".equalsIgnoreCase(status) ) {
 				stockOrder.setTotalPrice(calculatePrices(stock,Double.valueOf(stockOrder.getUnits())));
 				stockOrder.setBrokerageFees(calculateBrokarage(Double.valueOf(stockOrder.getUnits()), stock.getPrice()));
 				stockOrder.setStatus("CONFIRM");
-				BeanUtils.copyProperties(stockOrderRepository.save(stockOrder),new StockOrderModel());
+				BeanUtils.copyProperties(stockOrderRepository.save(stockOrder),stockOrderModel);
 			}
 		}
 		else
@@ -148,7 +149,7 @@ public class StockServiceImpl implements StockService{
 		}
 
 
-		return order;
+		return stockOrderModel;
 	}
 	@Override
 	public List<StockHistoryModel> getAllStockOrders(Long userId) throws StockException{
