@@ -68,9 +68,8 @@ public class StockController
 	{
 		StockOrderModel stockOrder = stockService.processOrder(status,order);
 		Map<Integer,String> operationStatus= new HashMap();
-		if(stockOrder !=null) {
-			operationStatus.put(200,"Order Processed Successfully");
-		}
+		operationStatus.put(200,"Order Processed Successfully");
+		
 		ResponseData response = new ResponseData("Process Order", operationStatus, stockOrder);
 	 return new ResponseEntity<>(response,HttpStatus.OK);	
 	}
