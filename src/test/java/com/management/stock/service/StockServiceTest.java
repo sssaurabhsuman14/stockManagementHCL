@@ -20,11 +20,11 @@ import com.management.stock.entity.Stock;
 import com.management.stock.entity.StockOrder;
 import com.management.stock.exception.StockException;
 import com.management.stock.model.StockHistoryModel;
-import com.management.stock.model.StockModel;
+import com.management.stock.model.StockDTO;
 import com.management.stock.model.StockOrderModel;
 import com.management.stock.repository.StockOrderRepository;
 import com.management.stock.repository.StockRepository;
-import com.management.stock.serviceImp.StockServiceImpl;
+import com.management.stock.serviceimpl.StockServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StockServiceTest 
@@ -39,9 +39,9 @@ public class StockServiceTest
 	@Mock
 	StockOrderRepository stockOrderRepositoryMock;
 	
-	List<StockModel> stockModelList = new ArrayList<>();
+	List<StockDTO> stockModelList = new ArrayList<>();
 	List<Stock> stockList = new ArrayList<>();
-	StockModel model1 = new StockModel();
+	StockDTO model1 = new StockDTO();
 	Stock stock1 = new Stock();
 	Optional<Stock> stockOptional = Optional.of(stock1);
 	StockOrder order1 = new StockOrder();
@@ -98,7 +98,7 @@ public class StockServiceTest
 	public void testGetAllStockSuccess() throws StockException
 	{
 		Mockito.when(stockRepositoryMock.findAll()).thenReturn(stockList);
-		List<StockModel> allStockModelList = stockServiceImpl.getAllStock();
+		List<StockDTO> allStockModelList = stockServiceImpl.getAllStock();
 		
 		
 		assertNotNull(allStockModelList);
@@ -202,7 +202,18 @@ public class StockServiceTest
 	@Test
 	public void testSaveStock()
 	{
-		stockServiceImpl.saveStock(model1);
+		StockDTO stockDTO = new StockDTO();
+		stockDTO.setSymbol("SBI");
+		
+		Stock stock123 = new Stock();
+		stock123.setSymbol("SBI");
+		
+		Mockito.when(stockRepositoryMock.save(Mockito.any(Stock.class))).thenReturn(stock123);
+		
+		StockDTO saveStock = stockServiceImpl.saveStock(stockDTO);
+		
+		assertNotNull(saveStock);
+		assertEquals("SBI", saveStock.getSymbol());
 	}
 	
 	@Test
@@ -214,9 +225,9 @@ public class StockServiceTest
 		Optional<Stock> stockOptional =  Optional.of(stock);
 
 		Mockito.when(stockRepositoryMock.findById("SBIO")).thenReturn(stockOptional);
-		StockModel stockModel = stockServiceImpl.getQuotationService(1L, "SBIO",  100, LocalDate.now());
-		assertNotNull(stockModel);
-		assertEquals(stockOptional.get().getName(),stockModel.getName());
+		StockDTO stockDTO = stockServiceImpl.getQuotationService(1L, "SBIO",  100, LocalDate.now());
+		assertNotNull(stockDTO);
+		assertEquals(stockOptional.get().getName(),stockDTO.getName());
 	}
 	
 	@Test
@@ -228,9 +239,9 @@ public class StockServiceTest
 		Optional<Stock> stockOptional =  Optional.of(stock);
 
 		Mockito.when(stockRepositoryMock.findById("SBIO")).thenReturn(stockOptional);
-		StockModel stockModel = stockServiceImpl.getQuotationService(1L, "SBIO",  500, LocalDate.now());
-		assertNotNull(stockModel);
-		assertEquals(stockOptional.get().getName(),stockModel.getName());
+		StockDTO stockDTO = stockServiceImpl.getQuotationService(1L, "SBIO",  500, LocalDate.now());
+		assertNotNull(stockDTO);
+		assertEquals(stockOptional.get().getName(),stockDTO.getName());
 	}
 }
 

@@ -1,4 +1,4 @@
-package com.management.stock.serviceImp;
+package com.management.stock.serviceimpl;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import com.management.stock.entity.Stock;
 import com.management.stock.entity.StockOrder;
 import com.management.stock.exception.StockException;
 import com.management.stock.model.StockHistoryModel;
-import com.management.stock.model.StockModel;
+import com.management.stock.model.StockDTO;
 import com.management.stock.model.StockOrderModel;
 import com.management.stock.repository.StockOrderRepository;
 import com.management.stock.repository.StockRepository;
@@ -31,9 +31,9 @@ public class StockServiceImpl implements StockService{
 	StockOrderRepository stockOrderRepository;
 
 	@Override
-	public List<StockModel> getAllStock() throws StockException 
+	public List<StockDTO> getAllStock() throws StockException 
 	{
-		List<StockModel> stockModelList = new ArrayList<>();
+		List<StockDTO> stockModelList = new ArrayList<>();
 
 		List<Stock> stockList = stockRepository.findAll();
 
@@ -46,11 +46,11 @@ public class StockServiceImpl implements StockService{
 	}
 
 	
-	private List<StockModel> entityListToModelList(List<Stock> stockList, List<StockModel> stockModelList) 
+	private List<StockDTO> entityListToModelList(List<Stock> stockList, List<StockDTO> stockModelList) 
 	{
 		for(Stock entity : stockList)
 		{
-			StockModel model = new StockModel();
+			StockDTO model = new StockDTO();
 			BeanUtils.copyProperties(entity, model);
 			stockModelList.add(model);
 		}
@@ -86,9 +86,9 @@ public class StockServiceImpl implements StockService{
 
 	
 
-		public StockModel getQuotationService(Long userId, String symbol, int numberOfUnits, LocalDate quotationDate ) {
+		public StockDTO getQuotationService(Long userId, String symbol, int numberOfUnits, LocalDate quotationDate ) {
 
-			 StockModel stockModel = new StockModel();
+			 StockDTO stockDTO = new StockDTO();
 			 Double fees;
 			 Stock stock = new Stock();
 			 if(!(ObjectUtils.isEmpty(userId) && ObjectUtils.isEmpty(symbol))) {
@@ -106,12 +106,12 @@ public class StockServiceImpl implements StockService{
 
 			  }
 
-			  BeanUtils.copyProperties(stock, stockModel);
-			  stockModel.setTotalCharge((numberOfUnits*stock.getPrice())+ fees);
+			  BeanUtils.copyProperties(stock, stockDTO);
+			  stockDTO.setTotalCharge((numberOfUnits*stock.getPrice())+ fees);
 
 			 }
 
-			 return stockModel;
+			 return stockDTO;
 			}
 
 
@@ -189,12 +189,14 @@ public class StockServiceImpl implements StockService{
 }
 
 	@Override
-	public void saveStock(StockModel model) {
-	 if (model != null) {
-	  Stock entity = new Stock();
+	public StockDTO saveStock(StockDTO model) {
+	  
+		Stock entity = new Stock();
+		StockDTO stockDTO = new StockDTO();
 	  BeanUtils.copyProperties(model, entity);
-	  stockRepository.save(entity);
-	 }
+	  Stock stock = stockRepository.save(entity);
+	  BeanUtils.copyProperties(stock, stockDTO);
+	return stockDTO;
 
 	}
 		

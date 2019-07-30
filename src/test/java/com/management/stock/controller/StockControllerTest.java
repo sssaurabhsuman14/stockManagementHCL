@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.management.stock.exception.StockException;
 import com.management.stock.model.ResponseData;
-import com.management.stock.model.StockModel;
+import com.management.stock.model.StockDTO;
 import com.management.stock.model.StockOrderModel;
 import com.management.stock.service.StockService;
 
@@ -32,8 +32,8 @@ public class StockControllerTest
 	@Mock
 	StockService stockServiceMock;
 
-	List<StockModel> stockModelList = new ArrayList<>();
-	StockModel model1 = new StockModel();
+	List<StockDTO> stockModelList = new ArrayList<>();
+	StockDTO model1 = new StockDTO();
 
 	@Before
 	public void setUp()
@@ -50,7 +50,7 @@ public class StockControllerTest
 		Mockito.when(stockServiceMock.getAllStock()).thenReturn(stockModelList);
 		ResponseEntity<ResponseData> response = stockController.showAllStock();
 
-		List<StockModel> modelList = (List<StockModel>) response.getBody().getData();
+		List<StockDTO> modelList = (List<StockDTO>) response.getBody().getData();
 		assertNotNull(response);
 		assertEquals(1, modelList.size());
 		assertEquals(true, response.getBody().getStatus().containsKey(200));
@@ -71,14 +71,14 @@ public class StockControllerTest
 	public void getQuotation() {
 
 
-		StockModel stockModel = new StockModel(); 
-		stockModel.setPrice(100.00);
-		stockModel.setSymbol("SBI");
+		StockDTO stockDTO = new StockDTO(); 
+		stockDTO.setPrice(100.00);
+		stockDTO.setSymbol("SBI");
 
-		Mockito.when(stockServiceMock.getQuotationService(1L, "SBI", 100, LocalDate.now())).thenReturn(stockModel);
+		Mockito.when(stockServiceMock.getQuotationService(1L, "SBI", 100, LocalDate.now())).thenReturn(stockDTO);
 		ResponseEntity<ResponseData> response = stockController.getQuotation(1L, "SBI", 100);
 		assertNotNull(response); 
-		StockModel model = (StockModel) response.getBody().getData();
+		StockDTO model = (StockDTO) response.getBody().getData();
 		assertEquals("SBI", model.getSymbol());
 
 	}

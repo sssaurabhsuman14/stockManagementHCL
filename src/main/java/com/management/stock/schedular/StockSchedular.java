@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.management.stock.exception.StockException;
-import com.management.stock.model.StockModel;
+import com.management.stock.model.StockDTO;
 import com.management.stock.service.StockService;
 
 @Component
@@ -22,10 +22,10 @@ StockService stockService;
 @Scheduled(fixedRate = 2000)
 public void scheduleTaskWithFixedRate() throws  StockException, NoSuchAlgorithmException {
 
- List<StockModel> entityList = stockService.getAllStock();
+ List<StockDTO> entityList = stockService.getAllStock();
 
  if (!entityList.isEmpty()) {
-  for (StockModel model : entityList) {
+  for (StockDTO model : entityList) {
 
    Random random = SecureRandom.getInstanceStrong();
    double randomNumber = (random.nextInt(655) - 327);

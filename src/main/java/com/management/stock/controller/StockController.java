@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.management.stock.exception.StockException;
 import com.management.stock.model.ResponseData;
-import com.management.stock.model.StockModel;
+import com.management.stock.model.StockDTO;
 import com.management.stock.model.StockOrderModel;
 import com.management.stock.service.StockService;
 
@@ -32,7 +32,7 @@ public class StockController
 
 
 	@GetMapping("/all") public ResponseEntity<ResponseData> showAllStock() throws StockException {
-		List<StockModel> allStockList = stockService.getAllStock(); Map<Integer,
+		List<StockDTO> allStockList = stockService.getAllStock(); Map<Integer,
 		String> status = new HashMap(); status.put(200, "Successfull fetch");
 		ResponseData response = new ResponseData("Stock List", status, allStockList);
 		return new ResponseEntity<>(response, HttpStatus.OK); 
@@ -42,12 +42,12 @@ public class StockController
 	@GetMapping("/quotes/{userId}/{symbol}/{numberOfUnits}")
 	public ResponseEntity<ResponseData> getQuotation(@PathVariable("userId") Long userId, @PathVariable("symbol") String symbol, @PathVariable("numberOfUnits") int numberOfUnits) {
 		
-		StockModel stockModel = stockService.getQuotationService(userId, symbol, numberOfUnits, LocalDate.now());
+		StockDTO stockDTO = stockService.getQuotationService(userId, symbol, numberOfUnits, LocalDate.now());
 		Map<Integer, String> status = new HashMap<>(); 
 		status.put(200, "Successfull fetching ");  
 
 		ResponseData response = new ResponseData("Stock Quotes ",
-				status, stockModel);
+				status, stockDTO);
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}

@@ -18,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import com.management.stock.exception.StockException;
 import com.management.stock.model.ResponseData;
 import com.management.stock.model.StockHistoryModel;
-import com.management.stock.model.StockModel;
+import com.management.stock.model.StockDTO;
 import com.management.stock.model.StockOrderModel;
 import com.management.stock.service.StockService;
 
