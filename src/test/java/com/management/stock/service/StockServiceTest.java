@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.OngoingStubbing;
 
 import com.management.stock.entity.Stock;
 import com.management.stock.entity.StockOrder;
@@ -194,11 +192,12 @@ public class StockServiceTest
 	}
 	
 	@Test(expected = StockException.class)
-	public void failureTestGetAllStockOrders() throws StockException
+	public void testGetAllStockOrdersFailure() throws StockException
 	{
-		List<StockHistoryModel> stockHistoryList=stockServiceImpl.getAllStockOrders(null);
+		stockServiceImpl.getAllStockOrders(null);
 	}
 
+	@Test
 	public void testGetStockOrder() throws StockException {
 		
 		Long stockOrderId=1L;
@@ -208,9 +207,16 @@ public class StockServiceTest
 	}
 	
 	@Test(expected = StockException.class)
-	public void failureTestGetStockOrder() throws StockException
+	public void testGetStockOrderFailure() throws StockException
 	{
-		orderModel1=stockServiceImpl.getStockOrder(null);
+		stockServiceImpl.getStockOrder(null);
+	}
+	
+	
+	@Test
+	public void testSaveStock()
+	{
+		stockServiceImpl.saveStock(model1);
 	}
 }
 

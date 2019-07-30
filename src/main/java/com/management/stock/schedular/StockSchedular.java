@@ -5,12 +5,10 @@ import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.management.stock.entity.Stock;
 import com.management.stock.exception.StockException;
 import com.management.stock.model.StockModel;
 import com.management.stock.service.StockService;
@@ -28,16 +26,13 @@ public void scheduleTaskWithFixedRate() throws  StockException, NoSuchAlgorithmE
 
  if (!entityList.isEmpty()) {
   for (StockModel model : entityList) {
-   Stock entity = new Stock();
-   BeanUtils.copyProperties(model, entity);
 
    Random random = SecureRandom.getInstanceStrong();
    double randomNumber = (random.nextInt(655) - 327);
 
    if (randomNumber < 0) {
     randomNumber = randomNumber * (-1);
-    entity.setPrice(randomNumber);
-    BeanUtils.copyProperties(entity, model);
+    model.setPrice(randomNumber);
     stockService.saveStock(model);
    }
 
