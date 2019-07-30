@@ -31,17 +31,6 @@ public class StockController
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 	@GetMapping("/all") public ResponseEntity<ResponseData> showAllStock() throws StockException {
 		List<StockModel> allStockList = stockService.getAllStock(); Map<Integer,
 		String> status = new HashMap(); status.put(200, "Successfull fetch");
